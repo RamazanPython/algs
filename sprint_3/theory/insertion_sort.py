@@ -1,12 +1,13 @@
-def insertion_sort(array):
+def insertion_sort(array: list[int]):
     for i in range(1, len(array)):
-        insertion_element = array[i]
+        item_to_insert = array[i]
         j = i
-        while j > 0 and insertion_element < array[j - 1]:
+        while j > 0 and item_to_insert < array[j - 1]:
             array[j] = array[j - 1]
             j -= 1
 
-        array[j] = insertion_element
+        array[j] = item_to_insert
+        print('step {}, sorted {} elements: {}'.format(i, i + 1, array))
 
     return array
 
