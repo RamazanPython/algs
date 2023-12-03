@@ -57,7 +57,7 @@ def partition(
         right -= 1
 
 
-def quick_sort(
+def sort_students(
         arr: list[Student],
         left: int,
         right: int,
@@ -70,8 +70,8 @@ def quick_sort(
 
     pivot = random.choice(arr)
     split_index = partition(arr=arr, pivot=pivot, left=left, right=right, comparator=comparator, reverse=reverse)
-    quick_sort(arr=arr, left=left, right=split_index - 1, comparator=comparator, reverse=reverse)
-    quick_sort(arr=arr, left=split_index, right=right, comparator=comparator, reverse=reverse)
+    sort_students(arr=arr, left=left, right=split_index - 1, comparator=comparator, reverse=reverse)
+    sort_students(arr=arr, left=split_index, right=right, comparator=comparator, reverse=reverse)
 
 
 def main() -> None:
@@ -82,7 +82,7 @@ def main() -> None:
         score, errors = int(score), int(errors)
         students.append(Student(name=name, score=score, errors=errors))
 
-    quick_sort(arr=students, left=0, right=len(students) - 1, comparator=compare_students, reverse=True)
+    sort_students(arr=students, left=0, right=len(students) - 1, comparator=compare_students, reverse=True)
     for student in students:
         print(student.name)
 
