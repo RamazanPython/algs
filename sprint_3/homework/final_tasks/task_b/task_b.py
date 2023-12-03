@@ -1,3 +1,29 @@
+# ID - 101463637
+# Time: O(NlogN)
+# Space: O(1)
+"""
+Принцип работы
+
+
+Нам дан неотсортированный массив. Мы должны его отсортировать используя быстрый поиск без дополнительной памяти.
+Главная идея будет такая же как и в обычном быстром поиске, но с изменением расположения массива вместо хранения его
+в отдельным массивах.
+
+a = [10, 4, 5, 1, 0, 11, 2, 4]
+
+Берем два указателя left = 0 и right = len(a) - 1. Берем сравниваемый элемент (pivot). Пусть это будет центральный
+элемент pivot = a[mid].
+
+Нам нужно добиться того, что в левой части массива будут элементы меньше pivot, а в правой больше.
+Создадим функцию partition, которая будет заниматься этим. Мы будем сдвигать left вперед, если a[left] < pivot. И
+сдвигать right назад, если a[right] > pivot. После этого мы меняем местами элементы. Это будет работать в цикле
+и мы будет это делать до момента столкновения left и right.
+
+Далее мы возвраащем индекс left, так как после последней смены мест left > right. После этого в главной функции мы
+вызываем рекурсивно функцию сортировки, которая будет сортировать леву и правую часть массива.
+"""
+
+
 from typing import Callable, Any
 
 
@@ -40,19 +66,19 @@ def partition(
         comparator: Callable[[Any, Any, bool], bool],
         reverse: bool = False
 ) -> int:
-    while True:
+    while left <= right:
         while comparator(pivot, arr[left], reverse):
             left += 1
 
         while comparator(arr[right], pivot, reverse):
             right -= 1
 
-        if left >= right:
-            return right + 1
+        if left <= right:
+            arr[left], arr[right] = arr[right], arr[left]
+            left += 1
+            right -= 1
 
-        arr[left], arr[right] = arr[right], arr[left]
-        left += 1
-        right -= 1
+    return left
 
 
 def quicksort(
@@ -62,11 +88,11 @@ def quicksort(
         comparator: Callable[[Any, Any, bool], bool],
         reverse: bool = False
 ) -> None:
-    length = right - left + 1
-    if length < 2:
+    if left >= right:
         return
 
-    pivot = arr[left]
+    mid = (left + right) // 2
+    pivot = arr[mid]
     split_index = partition(arr=arr, pivot=pivot, left=left, right=right, comparator=comparator, reverse=reverse)
     quicksort(arr=arr, left=left, right=split_index - 1, comparator=comparator, reverse=reverse)
     quicksort(arr=arr, left=split_index, right=right, comparator=comparator, reverse=reverse)
