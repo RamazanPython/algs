@@ -1,40 +1,90 @@
 import random
 
-from typing import Callable
+from typing import Callable, Any
 
 
-def comparator(elem1: list, elem2: list):
-    name1, score1, errors1 = elem1
-    name2, score2, errors2 = elem2
+class Student:
 
-    if score1 > score2:
-        return True
-    elif score1 == score2:
-        if errors1 < errors2:
-            return True
-        elif errors1 == errors2:
-            if name1 < name2:
-                return True
+    def __init__(self, name: str, score: int, errors: int) -> None:
+        self.name = name
+        self.score = score
+        self.errors = errors
 
-    return False
+    def __str__(self) -> str:
+        return self.name
+
+    def __repr__(self) -> str:
+        return f"Student(name='{self.name}', score={self.score}, errors={self.errors})"
+
+    def __gt__(self, other: "Student") -> bool:
+        return ((self.score > other.score)
+                or (self.score == other.score and self.errors < other.errors)
+                or (self.score == other.score and self.errors == other.errors and self.name < other.name))
+
+    def __lt__(self, other: "Student") -> bool:
+        return ((self.score < other.score)
+                or (self.score == other.score and self.errors > other.errors)
+                or (self.score == other.score and self.errors == other.errors and self.name > other.name))
 
 
-def quick_sort(competitors: list[list[str, int, int]], left, right, comparator: Callable):
-    return []
+def compare_students(student1: Student, student2: Student, reverse: bool = False) -> bool:
+    if reverse:
+        return student1 < student2
+
+    return student1 > student2
 
 
-def main():
+def partition(
+        arr: list[Student],
+        pivot: Student,
+        left: int,
+        right: int,
+        comparator: Callable[[Any, Any, bool], bool],
+        reverse: bool = False
+) -> int:
+    while True:
+        while comparator(pivot, arr[left], reverse):
+            left += 1
+
+        while comparator(arr[right], pivot, reverse):
+            right -= 1
+
+        if left >= right:
+            return right + 1
+
+        arr[left], arr[right] = arr[right], arr[left]
+        left += 1
+        right -= 1
+
+
+def quick_sort(
+        arr: list[Student],
+        left: int,
+        right: int,
+        comparator: Callable[[Any, Any, bool], bool],
+        reverse: bool = False
+) -> None:
+    length = right - left + 1
+    if length < 2:
+        return
+
+    pivot = random.choice(arr)
+    split_index = partition(arr=arr, pivot=pivot, left=left, right=right, comparator=comparator, reverse=reverse)
+    quick_sort(arr=arr, left=left, right=split_index - 1, comparator=comparator, reverse=reverse)
+    quick_sort(arr=arr, left=split_index, right=right, comparator=comparator, reverse=reverse)
+
+
+def main() -> None:
     n = int(input().strip())
-    competitors = []
+    students = []
     for _ in range(n):
-        name, score1, score2 = input().strip().split()
-        score1, score2 = int(score1), int(score2)
-        competitor = [name, score1, score2]
-        competitors.append(competitor)
+        name, score, errors = input().strip().split()
+        score, errors = int(score), int(errors)
+        students.append(Student(name=name, score=score, errors=errors))
 
-    quick_sort(competitors, 0, len(competitors) - 1, comparator)
-    for competitor in competitors:
-        print(competitor[0])
+    quick_sort(arr=students, left=0, right=len(students) - 1, comparator=compare_students, reverse=True)
+    for student in students:
+        print(student.name)
 
 
 if __name__ == "__main__":
