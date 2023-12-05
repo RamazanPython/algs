@@ -60,7 +60,7 @@ def broken_search(nums: list[int], target: int) -> int:
     right = len(nums) - 1
 
     while left <= right:
-        mid = (left + right) // 2
+        mid = (left + right) >> 1
         if nums[mid] == target:
             return mid
 

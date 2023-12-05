@@ -1,4 +1,4 @@
-# ID - 101463637
+# ID - 102086917
 # Time: O(NlogN)
 # Space: O(1)
 """
@@ -21,8 +21,12 @@ a = [10, 4, 5, 1, 0, 11, 2, 4]
 
 Далее мы возвраащем индекс left, так как после последней смены мест left > right. После этого в главной функции мы
 вызываем рекурсивно функцию сортировки, которая будет сортировать леву и правую часть массива.
+
+
+UPD: Теперь беру рандомный pivot. Применил вместо random.choice random.randrange и заработало!
 """
 
+import random
 
 from typing import Callable, Any
 
@@ -91,8 +95,8 @@ def quicksort(
     if left >= right:
         return
 
-    mid = (left + right) // 2
-    pivot = arr[mid]
+    pivot_idx = random.randrange(left, right)
+    pivot = arr[pivot_idx]
     split_index = partition(arr=arr, pivot=pivot, left=left, right=right, comparator=comparator, reverse=reverse)
     quicksort(arr=arr, left=left, right=split_index - 1, comparator=comparator, reverse=reverse)
     quicksort(arr=arr, left=split_index, right=right, comparator=comparator, reverse=reverse)
