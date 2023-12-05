@@ -1,13 +1,23 @@
 def solution(arr: list[int], top: int) -> list:
     count_uni = {}
     for elem in arr:
-        if elem not in count_uni:
-            count_uni[elem] = 1
-        else:
-            count_uni[elem] += 1
+        count_uni[elem] = 1 + count_uni.get(elem, 0)
 
+    bucket = [[] for _ in range(len(arr) + 1)]
+    for elem, count in count_uni.items():
+        bucket[count].append(elem)
 
-    return []
+    result = []
+    for nums in reversed(bucket):
+        if not nums:
+            continue
+
+        nums.sort()
+        result.extend(nums)
+        if len(result) >= top:
+            break
+
+    return result[:top]
 
 
 def main():
