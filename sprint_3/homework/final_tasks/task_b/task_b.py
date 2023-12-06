@@ -1,4 +1,4 @@
-# ID - 102086917
+# ID - 102124386
 # Time: O(NlogN)
 # Space: O(1)
 """
@@ -24,6 +24,8 @@ a = [10, 4, 5, 1, 0, 11, 2, 4]
 
 
 UPD: Теперь беру рандомный pivot. Применил вместо random.choice random.randrange и заработало!
+
+UPD: убрал компаратор и reverse
 """
 
 import random
@@ -55,26 +57,17 @@ class Student:
                 or (self.score == other.score and self.errors == other.errors and self.name > other.name))
 
 
-def compare_students(student1: Student, student2: Student, reverse: bool = False) -> bool:
-    if reverse:
-        return student1 < student2
-
-    return student1 > student2
-
-
 def partition(
         arr: list[Student],
         pivot: Student,
         left: int,
         right: int,
-        comparator: Callable[[Any, Any, bool], bool],
-        reverse: bool = False
 ) -> int:
     while left <= right:
-        while comparator(pivot, arr[left], reverse):
+        while pivot < arr[left]:
             left += 1
 
-        while comparator(arr[right], pivot, reverse):
+        while arr[right] < pivot:
             right -= 1
 
         if left <= right:
@@ -85,25 +78,15 @@ def partition(
     return left
 
 
-def quicksort(
-        arr: list[Student],
-        left: int,
-        right: int,
-        comparator: Callable[[Any, Any, bool], bool],
-        reverse: bool = False
-) -> None:
+def quicksort(arr: list[Student], left: int, right: int) -> None:
     if left >= right:
         return
 
     pivot_idx = random.randrange(left, right)
     pivot = arr[pivot_idx]
-    split_index = partition(arr=arr, pivot=pivot, left=left, right=right, comparator=comparator, reverse=reverse)
-    quicksort(arr=arr, left=left, right=split_index - 1, comparator=comparator, reverse=reverse)
-    quicksort(arr=arr, left=split_index, right=right, comparator=comparator, reverse=reverse)
-
-
-def sort_students(arr: list, reverse: bool = False) -> None:
-    quicksort(arr=arr, left=0, right=len(arr) - 1, comparator=compare_students, reverse=reverse)
+    split_index = partition(arr=arr, pivot=pivot, left=left, right=right)
+    quicksort(arr=arr, left=left, right=split_index - 1)
+    quicksort(arr=arr, left=split_index, right=right)
 
 
 def main() -> None:
@@ -114,7 +97,7 @@ def main() -> None:
         score, errors = int(score), int(errors)
         students.append(Student(name=name, score=score, errors=errors))
 
-    sort_students(arr=students, reverse=True)
+    quicksort(arr=students, left=0, right=len(students) - 1)
     for student in students:
         print(student.name)
 
