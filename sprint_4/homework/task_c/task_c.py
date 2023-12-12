@@ -1,4 +1,4 @@
-def get_prefix_hash_sum(string: str, base: int, mod: int):
+def get_prefix_hash_sum(string: str, base: int, mod: int) -> list:
     prefix_hash_sum_length = len(string) + 1
     prefix_hash_sum = [0] * prefix_hash_sum_length
     prefix_hash_sum[1] = ord(string[0])
@@ -8,7 +8,7 @@ def get_prefix_hash_sum(string: str, base: int, mod: int):
     return prefix_hash_sum
 
 
-def binpow(num, power):
+def fast_power(num: int, power: int) -> int:
     s, v, c = 1, power, num
     while v > 0:
         if v % 2 == 1:
@@ -18,17 +18,20 @@ def binpow(num, power):
     return s
 
 
-def main():
+def main() -> None:
     base = int(input().strip())
     mod = int(input().strip())
     string = input().strip()
     amount = int(input().strip())
     borders = []
+    max_power = 0
     for _ in range(amount):
         l, r = list(map(int, input().strip().split()))
+        current_power = r - l + 1
+        if current_power > max_power:
+            max_power = current_power
         borders.append([l, r])
 
-    max_power = max([r - l + 1 for l, r in borders])
     powers = [1] * (max_power + 1)
     for i in range(1, max_power + 1):
         powers[i] = (powers[i - 1] * base) % mod
@@ -38,7 +41,7 @@ def main():
         l, r = border
         power = r - l + 1
         power_value = powers[power]
-        result = (hashes[r] - hashes[l - 1] * power_value) % mod
+        result = (hashes[r] + mod - hashes[l - 1] * power_value % mod) % mod
         print(result)
 
 
