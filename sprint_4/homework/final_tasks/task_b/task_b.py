@@ -1,3 +1,17 @@
+# ID - 102941481
+# Time: O(1)
+# Space: O(N)
+"""
+Принцип работы
+
+Моя хеш таблица использует в качестве размера бакетов 10 ** 5. Для решение коллизий используется метод цепочек.
+Принцип работы: если при вычисления индекса ключа оказывается, что в этом бакете уже есть элемент, то вставляемый
+элемент добалвяется в конец. Так же при работе программы для оптимизации вывода данных я сначала их собираю в
+переменной, а потом разом все вывожу. В качестве хеш функции взял форумлу:
+    hash = (key * q) % R (q и R взял из теории)
+"""
+
+
 class LinkedList:
 
     def __init__(self, key=None, value=None, next_node=None) -> None:
@@ -7,14 +21,18 @@ class LinkedList:
 
 
 class HashTable:
-
     _MAX_LENGTH = 10 ** 5
+    _Q = 10 ** 9 + 7
+    _R = 2 ** 64
 
     def __init__(self) -> None:
         self.buckets: list[LinkedList] = [LinkedList() for _ in range(self._MAX_LENGTH)]
 
+    def get_hash(self, key):
+        return (key * self._Q) % self._R
+
     def get_index(self, key: int) -> int:
-        return hash(key) % self._MAX_LENGTH
+        return self.get_hash(key) % self._MAX_LENGTH
 
     def put(self, key: int, value: int) -> None:
         idx = self.get_index(key)
