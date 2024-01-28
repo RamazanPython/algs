@@ -11,13 +11,14 @@ if LOCAL:
 
 
 def solution(root) -> int:
+
     def find_max_value(node):
         if node is None:
             return float("-inf")
 
-        left_max_value = solution(node.left)
-        right_max_value = solution(node.right)
-        return max(left_max_value, node.value, right_max_value)
+        left = find_max_value(node.left)
+        right = find_max_value(node.right)
+        return max(node.value, left, right)
 
     return find_max_value(root)
 

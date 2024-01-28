@@ -1,6 +1,6 @@
-# ID - 104292442
-# Time: NlogN
-# Space: N - так как нужен массив для хранения результата и массив для хранения кучи
+# ID - 104459097
+# Time: O(NlogN)
+# Space: O(N) - так как нужен массив для хранения отсортированных данных + глубина рекурсии
 """
 Принцип работы:
 
@@ -66,10 +66,12 @@ def heap_sort(competitors: list[list[str, int, int]]):
     for item in competitors:
         heap_add(heap, item)
 
-    sorted_array = []
+    sorted_array = [None] * len(heap)
+    idx = 0
     while heap:
         max_val = pop_max(heap)
-        sorted_array.append(max_val)
+        sorted_array[idx] = max_val
+        idx += 1
 
     return sorted_array
 

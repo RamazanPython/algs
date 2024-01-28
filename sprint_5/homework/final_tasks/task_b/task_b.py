@@ -1,6 +1,6 @@
 # ID - 104293198
 # Time - O(logN)
-# Space - O(1)
+# Space - O(1) - избавился от рекурсии
 
 """
 Принцип работы
@@ -30,27 +30,51 @@ else:
     from node import Node
 
 
+def find(root, key):
+    parent = None
+    current = root
+    while current is not None and current.value != key:
+        parent = current
+        if key < current.value:
+            current = current.left
+        else:
+            current = current.right
+    return current, parent
+
+
 def remove(root, key) -> Optional[Node]:
     if root is None:
-        return
+        return None
 
-    if root.value > key:
-        root.left = remove(root.left, key)
-    elif key > root.value:
-        root.right = remove(root.right, key)
+    current, parent = find(root, key)
+
+    if current is None:
+        return root
+
+    if current.left is None:
+        # Если корень
+        if parent is None:
+            return current.right
+        if current == parent.left:
+            parent.left = current.right
+        else:
+            parent.right = current.right
+    elif current.right is None:
+        # Если корень
+        if parent is None:
+            return current.left
+        if current == parent.left:
+            parent.left = current.left
+        else:
+            parent.right = current.left
     else:
-        if root.left is None:
-            return root.right
-        if root.right is None:
-            return root.left
-
-        min_right = root.right
-        min_right_parent = root
+        min_right_parent = current
+        min_right = current.right
         while min_right.left:
             min_right_parent = min_right
             min_right = min_right.left
 
-        root.value = min_right.value
+        current.value = min_right.value
 
         if min_right_parent.right == min_right:
             min_right_parent.right = min_right.right
