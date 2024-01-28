@@ -6,7 +6,7 @@ def get_max_spanning_tree_weight(adj_list: list) -> int | str:
 
     max_heap = []
     for vertex, weight in adj_list[start_vertex]:
-        # Transform minheap to maxheap by this multiplication
+        # Transform minheap to maxheap by converting to negative
         # https://stackoverflow.com/a/44352853
         heapq.heappush(max_heap, [-weight, start_vertex, vertex])
 
